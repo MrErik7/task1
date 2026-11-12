@@ -38,18 +38,16 @@ SET client_min_messages TO NOTICE; -- More talk
 
 
 -- Tests various queries from the assignment, uncomment these as you make progress
--- SELECT idnr, name, login, program, branch FROM BasicInformation ORDER BY idnr;
+SELECT idnr, name, login, program, branch FROM BasicInformation ORDER BY idnr;
+SELECT student, course, courseName, grade, credits FROM FinishedCourses ORDER BY (student, course);
+SELECT student, course, status FROM Registrations ORDER BY (status, course, student);
 
--- SELECT student, course, courseName, grade, credits FROM FinishedCourses ORDER BY (student, course);
-
--- SELECT student, course, status FROM Registrations ORDER BY (status, course, student);
-
--- SELECT student, totalCredits, mandatoryLeft, mathCredits, seminarCourses, qualified FROM PathToGraduation ORDER BY student;
+SELECT student, totalCredits, mandatoryLeft, mathCredits, seminarCourses, qualified FROM PathToGraduation ORDER BY student;
 
 -- Helper views for PathToGraduation (optional)
---SELECT student, course, credits FROM PassedCourses ORDER BY (student, course);
---SELECT student, course FROM UnreadMandatory ORDER BY (student, course);
---SELECT student, course, credits FROM RecommendedCourses ORDER BY (student, course);
+SELECT student, course, credits FROM PassedCourses ORDER BY (student, course);
+SELECT student, course FROM UnreadMandatory ORDER BY (student, course);
+SELECT student, course, credits FROM RecommendedCourses ORDER BY (student, course);
 
 
 -- Life-hack: When working on a new view you can write it as a query here (without creating a view) and when it works just add CREATE VIEW and put it in views.sql

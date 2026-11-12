@@ -51,7 +51,6 @@ CREATE TABLE Classified(
     FOREIGN KEY(classification) REFERENCES Classifications(name)
 );
 
-
 CREATE TABLE MandatoryProgram(
     course TEXT,
     program TEXT,
@@ -93,7 +92,6 @@ CREATE TABLE Taken (
     PRIMARY KEY(student, course),
     FOREIGN KEY(student) REFERENCES Students(idnr),
     FOREIGN KEY(course) REFERENCES Courses(code)
-
 );
 
 CREATE TABLE WaitingList (
