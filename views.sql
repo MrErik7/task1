@@ -52,10 +52,42 @@ JOIN RecommendedBranch ON StudentBranches.branch  = RecommendedBranch.branch
 
 --- wrong ?!
 CREATE VIEW PathToGraduation AS
-SELECT Students.idnr AS student, COALESCE(tc.total, 0) AS totalCredits
+SELECT Students.idnr AS student, 
+    COALESCE(tc.total, 0) AS totalCredits,
+    COALESCE(ml.cnt, 0)   AS mandatoryLeft,
+    COALESCE(mc.total, 0) AS mathCredits,
+    COALESCE(sc.cnt, 0)   AS seminarCourses,
+    (   COALESCE(ml.cnt, 0)     = 0
+    AND COALESCE(mc.total, 0)   >= 20
+    AND COALESCE(sc.cnt, 0)     >= 1
+    AND COALESCE(rc.total, 0)   >= 10) AS qualified
+
 FROM Students
-    LEFT JOIN (SELECT student, SUM(credits) AS total FROM PassedCourses GROUP BY student) tc
-            ON Students.idnr = tc.student;
+    LEFT JOIN (SELECT student, SUM(credits) AS total
+            FROM PassedCourses GROUP BY student) 
+            tc ON Students.idnr = tc.student
+
+    LEFT JOIN (SELECT student, COUNT(*) AS cnt
+            FROM UnreadMandatory GROUP BY student) ml
+        ON Students.idnr = ml.student
+
+    LEFT JOIN (SELECT PassedCourses.student, SUM(PassedCourses.credits) AS total
+            FROM PassedCourses
+            JOIN Classified ON PassedCourses.course = Classified.course
+            WHERE Classified.classification = 'math'
+            GROUP BY PassedCourses.student) mc
+        ON Students.idnr = mc.student
+    
+    LEFT JOIN (SELECT PassedCourses.student, COUNT(*) AS cnt
+            FROM PassedCourses
+            JOIN Classified ON PassedCourses.course = Classified.course
+            WHERE Classified.classification = 'seminar'
+            GROUP BY PassedCourses.student) sc
+        ON Students.idnr = sc.student
+
+    LEFT JOIN (SELECT student, SUM(credits) AS total
+            FROM RecommendedCourses GROUP BY student) rc
+        ON Students.idnr = rc.student;
 
 
 -------
