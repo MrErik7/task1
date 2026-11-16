@@ -50,7 +50,6 @@ JOIN RecommendedBranch ON StudentBranches.branch  = RecommendedBranch.branch
 
 -------
 
---- wrong ?!
 CREATE VIEW PathToGraduation AS
 SELECT Students.idnr AS student, 
     COALESCE(tc.total, 0) AS totalCredits,
@@ -88,7 +87,6 @@ FROM Students
     LEFT JOIN (SELECT student, SUM(credits) AS total
             FROM RecommendedCourses GROUP BY student) rc
         ON Students.idnr = rc.student;
-
 
 -------
 
